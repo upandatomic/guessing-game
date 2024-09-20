@@ -49,6 +49,7 @@ header {
 .input-row {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
 }
 
@@ -58,8 +59,41 @@ header {
     font-size: 24px;
     text-align: center;
     margin: 0 2px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
+.input-row input:disabled {
+    background-color: #ccc;
+    color: #666;
+}
+
+/* Style for the decimal dot */
+.decimal-dot {
+    display: inline-block;
+    width: 10px;
+    text-align: center;
+    font-size: 24px;
+    margin: 0 2px;
+    line-height: 40px; /* Aligns the dot vertically with input boxes */
+}
+
+/* Feedback colors */
+.input-row input.correct {
+    background-color: green;
+    color: white;
+}
+
+.input-row input.lower {
+    background-color: darkblue; /* Dark navy blue */
+    color: white;
+}
+
+.input-row input.higher {
+    background-color: darkred;
+    color: white;
+}
+
+/* Feedback message */
 .feedback {
     margin-top: 20px;
     font-size: 18px;
@@ -79,35 +113,4 @@ header {
 
 #new-game:hover {
     background-color: #333;
-}
-/* Feedback colors */
-.input-row input.correct {
-    background-color: green;
-    color: white;
-}
-
-.input-row input.lower {
-    background-color: darkblue; /* Dark navy blue */
-    color: white;
-}
-
-.input-row input.higher {
-    background-color: darkred;
-    color: white;
-}
-
-/* Ensure inputs accept only digits */
-.input-row input {
-    /* ... existing styles ... */
-    font-size: 24px;
-    text-align: center;
-    margin: 0 2px;
-    /* Add this line to restrict input to digits */
-    font-family: 'Courier New', Courier, monospace;
-}
-
-/* Adjust input types */
-.input-row input:disabled {
-    background-color: #ccc;
-    color: #666;
 }

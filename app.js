@@ -2,7 +2,7 @@
 
 console.log('script.js is loaded');
 
-// Sample product list (you can expand this list)
+// Sample product list
 const products = [
     { name: "Wireless Headphones", price: 199.99 },
     { name: "Bluetooth Speaker", price: 149.99 },
@@ -61,8 +61,11 @@ function generateBasket() {
         totalValue = 9999.99;
     }
     totalValue = parseFloat(totalValue.toFixed(2)); // Round to 2 decimal places
-    totalValueString = totalValue.toFixed(2).replace('.', ''); // Remove decimal point for comparison
+
+    // Remove decimal and pad with leading zeros to ensure 6 digits
+    totalValueString = totalValue.toFixed(2).replace('.', '').padStart(6, '0');
     console.log('Total basket value:', totalValue);
+    console.log('Total value string:', totalValueString);
 }
 
 function displayBasketItems() {
@@ -101,7 +104,16 @@ function createInputRows() {
             inputBox.addEventListener('input', moveFocus);
             inputBox.addEventListener('keydown', handleEnter);
             inputBox.addEventListener('keypress', restrictInputToDigits);
+
             inputRow.appendChild(inputBox);
+
+            // Insert a decimal point after the 4th input box
+            if (j === 3) {
+                const dot = document.createElement('span');
+                dot.textContent = '.';
+                dot.classList.add('decimal-dot');
+                inputRow.appendChild(dot);
+            }
         }
 
         guessContainer.appendChild(inputRow);
@@ -154,6 +166,10 @@ function submitGuess() {
         alert('Please enter valid numbers.');
         return;
     }
+
+    // Pad guessValue with leading zeros to ensure 6 digits
+    guessValue = guessValue.padStart(6, '0');
+    console.log('User guess value:', guessValue);
 
     // Compare each digit and apply feedback
     const feedbackDigits = [];
