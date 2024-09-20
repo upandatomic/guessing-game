@@ -1,6 +1,8 @@
 // script.js
 
-// Sample product list (You can expand this list)
+console.log('script.js is loaded');
+
+// Sample product list (you can expand this list)
 const products = [
     { name: "Wireless Headphones", price: 199.99 },
     { name: "Bluetooth Speaker", price: 149.99 },
@@ -16,13 +18,16 @@ const products = [
 
 let basketItems = [];
 let totalValue = 0;
+let totalValueString = '';
 let attempts = 0;
 const maxAttempts = 5;
 
 function startGame() {
+    console.log('Game is starting...');
     // Reset variables
     basketItems = [];
     totalValue = 0;
+    totalValueString = '';
     attempts = 0;
     document.getElementById('feedback').textContent = '';
     document.getElementById('new-game').style.display = 'none';
@@ -56,6 +61,8 @@ function generateBasket() {
         totalValue = 9999.99;
     }
     totalValue = parseFloat(totalValue.toFixed(2)); // Round to 2 decimal places
+    totalValueString = totalValue.toFixed(2).replace('.', ''); // Remove decimal point for comparison
+    console.log('Total basket value:', totalValue);
 }
 
 function displayBasketItems() {
@@ -79,6 +86,7 @@ function displayBasketItems() {
 }
 
 function createInputRows() {
+    console.log('Creating input rows...');
     const guessContainer = document.getElementById('guess-container');
 
     for (let i = 0; i < maxAttempts; i++) {
@@ -91,11 +99,19 @@ function createInputRows() {
             inputBox.maxLength = 1;
             inputBox.disabled = i !== 0; // Enable only the first row
             inputBox.addEventListener('input', moveFocus);
-            inputBox.addEventListener('keyup', handleEnter);
+            inputBox.addEventListener('keydown', handleEnter);
+            inputBox.addEventListener('keypress', restrictInputToDigits);
             inputRow.appendChild(inputBox);
         }
 
         guessContainer.appendChild(inputRow);
+    }
+}
+
+function restrictInputToDigits(e) {
+    // Allow only digits
+    if (!/\d/.test(e.key)) {
+        e.preventDefault();
     }
 }
 
@@ -114,6 +130,7 @@ function moveFocus(e) {
 
 function handleEnter(e) {
     if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent default action
         submitGuess();
     }
 }
@@ -133,27 +150,40 @@ function submitGuess() {
         return;
     }
 
-    const guessNumber = parseFloat(guessValue);
-    if (isNaN(guessNumber)) {
+    if (!/^\d{6}$/.test(guessValue)) {
         alert('Please enter valid numbers.');
         return;
     }
 
+    // Compare each digit and apply feedback
+    const feedbackDigits = [];
+    for (let i = 0; i < 6; i++) {
+        const guessDigit = parseInt(guessValue[i], 10);
+        const actualDigit = parseInt(totalValueString[i], 10);
+
+        if (guessDigit === actualDigit) {
+            inputs[i].classList.add('correct');
+            feedbackDigits.push('correct');
+        } else if (guessDigit < actualDigit) {
+            inputs[i].classList.add('lower');
+            feedbackDigits.push('lower');
+        } else {
+            inputs[i].classList.add('higher');
+            feedbackDigits.push('higher');
+        }
+    }
+
     attempts++;
 
-    // Provide feedback
-    const feedback = document.getElementById('feedback');
-    if (guessNumber === totalValue) {
-        feedback.textContent = 'Correct! You guessed the exact price!';
-        endGame();
-    } else if (guessNumber > totalValue) {
-        feedback.textContent = 'Your guess is over the total value. Game over!';
+    // Check if all digits are correct
+    if (feedbackDigits.every(status => status === 'correct')) {
+        document.getElementById('feedback').textContent = 'Correct! You guessed the exact price!';
         endGame();
     } else if (attempts === maxAttempts) {
-        feedback.textContent = `You've used all your guesses. The correct price was $${totalValue.toFixed(2)}.`;
+        document.getElementById('feedback').textContent = `You've used all your guesses. The correct price was $${totalValue.toFixed(2)}.`;
         endGame();
     } else {
-        feedback.textContent = 'Your guess is lower than the total value. Try again!';
+        document.getElementById('feedback').textContent = 'See the feedback above and try again!';
         // Enable next row
         if (attempts < maxAttempts) {
             const nextRow = guessContainer.children[attempts];

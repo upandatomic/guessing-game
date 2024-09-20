@@ -80,3 +80,34 @@ header {
 #new-game:hover {
     background-color: #333;
 }
+/* Feedback colors */
+.input-row input.correct {
+    background-color: green;
+    color: white;
+}
+
+.input-row input.lower {
+    background-color: darkblue; /* Dark navy blue */
+    color: white;
+}
+
+.input-row input.higher {
+    background-color: darkred;
+    color: white;
+}
+
+/* Ensure inputs accept only digits */
+.input-row input {
+    /* ... existing styles ... */
+    font-size: 24px;
+    text-align: center;
+    margin: 0 2px;
+    /* Add this line to restrict input to digits */
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Adjust input types */
+.input-row input:disabled {
+    background-color: #ccc;
+    color: #666;
+}
